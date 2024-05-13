@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c345979fcf30b984b89153b71d845b42, type: 3}
+  m_Name: AaronPunch
+  m_EditorClassIdentifier: 
+  abilityName: Aaron Punch
+  description: Extremely badass attack that fucking demolishes everything it touches.
+  cost: 5
+  animation: Melee1
+  moveToSpectaclePos: 0
+  spectacleMoveType: 0
+  spectacleMoveDuration: 1
+  spectacleAttackDelay: 0
+  burstCast: 0
+  burstCount: 1
+  burstRate: 0.5
+  type: 0
+  damageMin: 40
+  damageMax: 50
+  healMin: 1
+  healMax: 1
+  damageMultiplier: 1.5
+  defenseMultiplier: 1.5
+  abilityEffect: {fileID: 0}
+  accuracy: 80
+  cannotMiss: 0
+  duration: 0
+  turnDuration: 1
+  fightersToTarget: 0
+  targetSelection: 0
+  numberOfTargets: 1
+  randomizeSelection: 0
+  visualEffect: {fileID: 0}
+  visualType: 1
+  attackReturnDelay: 0.2
+  attackReturnDuration: 1
+  firePattern: 0
+  castsPerTarget: 1
+  projectileSpeed: 5
+  arcAngle: 45
+  arcGravity: 1
+  visualDuration: 0.5
+  movementType: 0
+  moveDuration: 0.8
+  stopDistance: 2.5

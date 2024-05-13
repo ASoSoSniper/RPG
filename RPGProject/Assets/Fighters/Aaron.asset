@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b74aece5bfb62a14689adf2109727e35, type: 3}
+  m_Name: Aaron
+  m_EditorClassIdentifier: 
+  displayName: Aaron
+  description: Bro possesses knowledge of the Resident Evil franchise. He just like
+    me fr fr.
+  maxHealth: 200
+  currentHealth: 200
+  defense: 50
+  maxFP: 50
+  currentFP: 50
+  agility: 10
+  abilities:
+  - {fileID: 11400000, guid: b51de2b02dad46342b170afb68d7d2c9, type: 2}
+  - {fileID: 11400000, guid: 3f12b34285feae04bb6a0915b81e6648, type: 2}
+  - {fileID: 11400000, guid: a5b8b6cd645a7634bbbd617547c0be75, type: 2}
+  - {fileID: 11400000, guid: dce8b73eec14a294b842c0c6214bdac1, type: 2}
+  - {fileID: 11400000, guid: 0e25bbf5f50a3834d8938fc7212ad4c6, type: 2}
+  - {fileID: 11400000, guid: a907fa41ee201044ab2a75f414c4e20f, type: 2}
+  model: {fileID: 386248345385983837, guid: 1fb3aa2ada3b2c24e983fa983b7eef75, type: 3}
