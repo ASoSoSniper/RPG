@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54328180c02d5224ca3924b5afdf618c, type: 3}
+  m_Name: Heal
+  m_EditorClassIdentifier: 
+  buffType: 0
+  stackCap: 1
+  duplicatesCanCast: 0
+  durationType: 1
+  turnsTillRemoval: 0
+  castOnTurnStart: 1
+  hitStatusOnCast: 0
+  triggerMessage: Effect Applied!
+  hitStatusOnTurnStart: 1
+  turnStartMessage: 
+  textColor: {r: 0, g: 1, b: 0.15822577, a: 1}
+  textSize: 0.8
+  hitStatusPrefab: {fileID: 8490672089905051681, guid: 01914f201248b2246a9f8644cb852b78, type: 3}
+  healthGain: 5
+  healOverTime: 0

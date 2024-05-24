@@ -57,12 +57,12 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void CreateBattle(List<FighterInfo> playerFighters, List<FighterInfo> enemyFighters)
+    public void CreateBattle(List<FighterInfo> playerFighters, List<FighterInfo> enemyFighters, Dictionary<Item, int> playerItems, Dictionary<Item, int> enemyItems)
     {
         if (!activeBattle)
         {
             activeBattle = Instantiate(battlePrefab).GetComponent<Battle>();
-            activeBattle.SetupBattle(playerFighters, enemyFighters);
+            activeBattle.SetupBattle(playerFighters, enemyFighters, playerItems, enemyItems);
         }
     }
 }

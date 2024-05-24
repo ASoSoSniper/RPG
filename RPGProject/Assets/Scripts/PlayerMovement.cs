@@ -10,7 +10,7 @@ public class PlayerMovement : MonoBehaviour
         Walk,
         Run
     }
-    MoveStates moveStates = MoveStates.Idle;
+    //MoveStates moveStates = MoveStates.Idle;
 
     [SerializeField] float moveSpeed = 10f;
     [HideInInspector] public Rigidbody2D rigidBody;
@@ -19,6 +19,8 @@ public class PlayerMovement : MonoBehaviour
     ExploreSpriteAnims anims;
 
     public List<FighterInfo> playerCharacters;
+    public Dictionary<Item, int> items = new Dictionary<Item, int>();
+    [SerializeField] Item testItem;
     public List<PlayerMoveCompanion> companions;
     [SerializeField] GameObject companionPrefab;
 
@@ -50,6 +52,11 @@ public class PlayerMovement : MonoBehaviour
             companions.Add(component);
             index++;
         }
+
+        if (testItem)
+        {
+            items.Add(testItem, 5);
+        }
     }
 
     // Update is called once per frame
@@ -73,7 +80,7 @@ public class PlayerMovement : MonoBehaviour
             if (playerCharacters.Count == 0 || enemy.enemies.Count == 0) return;
 
             gameManager.StateTransition(GameManager.GameStates.Battle);
-            gameManager.CreateBattle(playerCharacters, enemy.enemies);
+            gameManager.CreateBattle(playerCharacters, enemy.enemies, items, enemy.items);
         }
     }
 

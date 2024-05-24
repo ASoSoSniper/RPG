@@ -25,13 +25,13 @@ public class VolleyProjectile : Projectile
 
         transform.rotation = Quaternion.Euler(0, 0, angle);
 
-        rigidbody2D.AddForce(transform.right * fighter.activeAbility.projectileSpeed, ForceMode2D.Impulse);
+        GetComponent<Rigidbody2D>().AddForce(transform.right * fighter.activeAbility.projectileSpeed, ForceMode2D.Impulse);
     }
 
     float CalculateAngle(Vector2 originPosition, Vector2 targetPosition)
     {
 
-        float gravity = rigidbody2D.gravityScale * -Physics2D.gravity.y;
+        float gravity = GetComponent<Rigidbody2D>().gravityScale * -Physics2D.gravity.y;
         float dx = targetPosition.x - originPosition.x;
         float dy = targetPosition.y - originPosition.y;
 

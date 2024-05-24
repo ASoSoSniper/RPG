@@ -256,7 +256,7 @@ public class Fighter : MonoBehaviour
             }
         }
 
-        currentHP = Mathf.Clamp(currentHP - damage, 0, currentHP);
+        currentHP = Mathf.Clamp(currentHP - damage, 0, fighterInfo.maxHealth);
         if (currentHP <= 0)
         {
             animator.SetTrigger("Death");

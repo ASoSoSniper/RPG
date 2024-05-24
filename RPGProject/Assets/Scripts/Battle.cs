@@ -4,6 +4,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
+using static UnityEditor.Progress;
+using UnityEditor.Playables;
 
 public class Battle : MonoBehaviour
 {
@@ -19,6 +21,11 @@ public class Battle : MonoBehaviour
 
     public List<Fighter> playerSprites = new List<Fighter>();
     public List<Fighter> enemySprites = new List<Fighter>();
+
+    public Dictionary<Item, int> playerItems = new Dictionary<Item, int>();
+    public Dictionary<Item, int> enemyItems = new Dictionary<Item, int>();
+    [HideInInspector] public Item activeItem;
+    List<Fighter> itemTargets = new List<Fighter>();
 
     [SerializeField] GameObject fighterPrefab;
 
@@ -39,6 +46,14 @@ public class Battle : MonoBehaviour
     [SerializeField] GameObject abilityButtonPrefab;
     List<AbilityButton> abilityList = new List<AbilityButton>();
 
+    [Header("Item Selection")]
+    [SerializeField] GameObject itemWindow;
+    [SerializeField] GameObject itemContentBox;
+    [SerializeField] GameObject itemButtonPrefab;
+    [SerializeField] int itemsPerRow = 5;
+    [SerializeField] float iconSpacing = 10f;
+    List<ItemButton> itemList = new List<ItemButton>();
+
     [Header("Other UI")]
     [SerializeField] float UISpacing = 30f;
     [SerializeField] TMP_Text descriptionText;
@@ -55,7 +70,7 @@ public class Battle : MonoBehaviour
         TargetSelect,
         InputDisabled
     }
-    SelectionModes selectionMode = SelectionModes.None;
+    [SerializeField] SelectionModes selectionMode = SelectionModes.None;
     public bool attackerAttacking;
 
     // Start is called before the first frame update
@@ -79,16 +94,19 @@ public class Battle : MonoBehaviour
                 if (abilityList.Count > 0) UpdateAbilityDisplay();
                 break;
             case SelectionModes.ItemSelect:
+                if (itemList.Count > 0) UpdateItemDisplay();
                 break;
         }
 
         if (!attackerAttacking) BattleStatus();
     }
 
-    public void SetupBattle(List<FighterInfo> playerSide, List<FighterInfo> enemySide)
+    public void SetupBattle(List<FighterInfo> playerSide, List<FighterInfo> enemySide, Dictionary<Item, int> playerSideItems, Dictionary<Item, int> enemySideItems)
     {
         playerFighters = playerSide;
         enemyFighters = enemySide;
+        playerItems = playerSideItems;
+        enemyItems = enemySideItems;
 
         List<Vector2> playerPositions = FindFighterPositions(true);
         List<Vector2> enemyPositions = FindFighterPositions(false);
@@ -216,6 +234,48 @@ public class Battle : MonoBehaviour
             UISpawn.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, UISpacing * -i);
         }
     }
+    void UpdateItemDisplay()
+    {
+        List<Item> itemsInInventory = new List<Item>();
+        foreach (KeyValuePair<Item, int> item in playerItems)
+        {
+            itemsInInventory.Add(item.Key);
+        }
+
+        for (int i = 0; i < itemList.Count; i++)
+        {
+            if (itemList[i].assignedItem == null)
+                itemList[i].assignedItem = itemsInInventory[i];
+
+            itemList[i].DisplayInfo();
+        }
+    }
+    void CreateItemDisplay()
+    {
+        foreach (ItemButton item in itemList)
+        {
+            Destroy(item.gameObject);
+        }
+        itemList.Clear();
+
+        if (playerItems.Count == 0) return;
+
+        int itemCount = 0;
+        int rows = playerItems.Count / itemsPerRow;
+        for (int i = 0; i <= rows; i++)
+        {
+            for (int j = 0; j < itemsPerRow; j++)
+            {
+                GameObject UISpawn = Instantiate(itemButtonPrefab, itemContentBox.transform);
+                itemList.Add(UISpawn.GetComponent<ItemButton>());
+
+                UISpawn.GetComponent<RectTransform>().anchoredPosition = new Vector2(iconSpacing * j, iconSpacing * -i);
+
+                itemCount++;
+                if (itemCount >= playerItems.Count) return;
+            }
+        }
+    }
 
     public void SwitchSelectionMode(SelectionModes mode)
     {
@@ -226,7 +286,10 @@ public class Battle : MonoBehaviour
 
         fighterWindow.SetActive(false);
         abilityWindow.SetActive(false);
+        itemWindow.SetActive(false);
         battleUI.SetActive(true);
+
+        itemTargets.Clear();
 
         switch (selectionMode)
         {
@@ -234,12 +297,16 @@ public class Battle : MonoBehaviour
                 break;
             case SelectionModes.FighterSelect:
                 fighterWindow.SetActive(true);
+                activeItem = null;
                 break;
             case SelectionModes.AbilitySelect:
                 abilityWindow.SetActive(true);
                 CreateAbilityDisplay();
                 break;
             case SelectionModes.ItemSelect:
+                itemWindow.SetActive(true);
+                CreateItemDisplay();
+                selectedFighter = null;
                 break;
             case SelectionModes.TargetSelect:
                 break;
@@ -292,27 +359,104 @@ public class Battle : MonoBehaviour
                 break;
         }
     }
+    public void UseItem(Item item)
+    {
+        activeItem = item;
+
+        switch (activeItem.ability.targetSelection)
+        {
+            case Ability.TargetSelection.All:
+                if (activeItem.ability.fightersToTarget == Ability.FightersToTarget.Allies || activeItem.ability.fightersToTarget == Ability.FightersToTarget.Both)
+                {
+                    foreach (Fighter fighter in playerSprites)
+                    {
+                        CollectTarget(fighter);
+                    }
+                }
+
+                if (activeItem.ability.fightersToTarget == Ability.FightersToTarget.Enemies || activeItem.ability.fightersToTarget == Ability.FightersToTarget.Both)
+                {
+                    foreach (Fighter fighter in enemySprites)
+                    {
+                        CollectTarget(fighter);
+                    }
+                }
+
+                TriggerItemEffect();
+                break;
+
+            case Ability.TargetSelection.Self:
+                Debug.Log("No self for items, skipping");
+                break;
+        }
+    }
+
+    void TriggerItemEffect()
+    {
+        if (!activeItem.ability.abilityEffect)
+        {
+            Debug.Log("No ability effect found");
+            return;
+        }
+
+        playerItems[activeItem]--;
+        if (playerItems[activeItem] <= 0) playerItems.Remove(activeItem);
+
+        foreach (Fighter target in itemTargets)
+        {
+            for (int i = 0; i < activeItem.ability.castsPerTarget; i++)
+            {
+                activeItem.ability.abilityEffect.Trigger(target);
+                if (activeItem.ability.visualEffect)
+                {
+                    GameObject visual = Instantiate(activeItem.ability.visualEffect.gameObject, transform);
+                    visual.transform.position = target.transform.position + Vector3.up * target.projectileYOffset;
+                }
+            }
+        }
+
+        SwitchSelectionMode(SelectionModes.None);
+    }
 
     public void CollectTarget(Fighter target)
     {
         if (selectionMode != SelectionModes.TargetSelect) return;
 
         bool ally = playerSprites.Contains(target);
-        bool bypassTargetMods = false;
-
-        switch (selectedFighter.activeAbility.fightersToTarget)
+        
+        if (selectedFighter)
         {
-            case Ability.FightersToTarget.Enemies:
-                if (ally) return;
-                bypassTargetMods = false;
-                break;
-            case Ability.FightersToTarget.Allies:
-                if (!ally) return;
-                bypassTargetMods = true;
-                break;
-        }
+            bool bypassTargetMods = false;
 
-        selectedFighter.AddTarget(target, bypassTargetMods);
+            switch (selectedFighter.activeAbility.fightersToTarget)
+            {
+                case Ability.FightersToTarget.Enemies:
+                    if (ally) return;
+                    bypassTargetMods = false;
+                    break;
+                case Ability.FightersToTarget.Allies:
+                    if (!ally) return;
+                    bypassTargetMods = true;
+                    break;
+            }
+
+            selectedFighter.AddTarget(target, bypassTargetMods);
+        }
+        else
+        {
+            switch (activeItem.ability.fightersToTarget)
+            {
+                case Ability.FightersToTarget.Enemies:
+                    if (ally) return;
+                    break;
+                case Ability.FightersToTarget.Allies:
+                    if (!ally) return;
+                    break;
+            }
+
+            itemTargets.Add(target);
+            if (itemTargets.Count >= activeItem.ability.numberOfTargets) TriggerItemEffect();
+        }
     }
 
     void OrderFightersByDepth()
