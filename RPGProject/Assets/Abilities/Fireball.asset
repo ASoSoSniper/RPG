@@ -20,19 +20,19 @@ MonoBehaviour:
   spectacleMoveType: 0
   spectacleMoveDuration: 0.3
   spectacleAttackDelay: 0.3
-  burstCast: 0
-  burstCount: 6
+  burstCast: 1
+  burstCount: 3
   burstRate: 0.1
   type: 0
-  damageMin: 20
-  damageMax: 20
+  damageMin: 10
+  damageMax: 10
   healMin: 1
   healMax: 1
   damageMultiplier: 1.5
   defenseMultiplier: 1.5
   abilityEffect: {fileID: 0}
   accuracy: 70
-  cannotMiss: 0
+  cannotMiss: 1
   duration: 0
   turnDuration: 1
   fightersToTarget: 0

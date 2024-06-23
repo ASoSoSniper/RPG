@@ -319,10 +319,10 @@ AnimationClip:
   m_HasGenericRootTransform: 1
   m_HasMotionFloatCurves: 0
   m_Events:
-  - time: 0.9
+  - time: 0.6666667
     functionName: KillFighter
     data: 
-    objectReferenceParameter: {fileID: 0}
+    objectReferenceParameter: {fileID: 1661987644514110618, guid: e366b1df9fef3684bb6818f8115d3700, type: 3}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0

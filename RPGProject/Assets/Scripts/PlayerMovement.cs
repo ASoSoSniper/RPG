@@ -25,8 +25,10 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] GameObject companionPrefab;
 
     public List<Vector2> footsteps;
+
     int maxFootsteps = 5;
-    [SerializeField] float footStepInterval = 5f;
+    public static float footStepInterval = 0.8f;
+    [SerializeField] int companionDistance = 3;
 
     // Start is called before the first frame update
     void Start()
@@ -36,21 +38,25 @@ public class PlayerMovement : MonoBehaviour
         anims = GetComponentInChildren<ExploreSpriteAnims>();
         gameManager = FindObjectOfType<GameManager>();
 
-        for (int i = 1; i < maxFootsteps; i++)
+        for (int i = 1; i < maxFootsteps * companionDistance; i++)
         {
             Vector2 footstep = transform.position + Vector3.up * -footStepInterval * i;
             footsteps.Add(footstep);
         }
 
         int index = 0;
+        GameObject following = gameObject;
         foreach (FighterInfo companion in playerCharacters)
         {
             GameObject spawn = Instantiate(companionPrefab);
             PlayerMoveCompanion component = spawn.GetComponent<PlayerMoveCompanion>();
 
+            component.following = following;
+            following = spawn;
+
             component.destination = footsteps[index];
             companions.Add(component);
-            index++;
+            index += companionDistance;
         }
 
         if (testItem)
@@ -67,7 +73,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void Move(Vector2 direction)
     {
-        rigidBody.velocity = direction * moveSpeed;
+        rigidBody.velocity = direction.normalized * moveSpeed;
         anims.UpdateDirection(direction != Vector2.zero);
     }
 
@@ -99,7 +105,7 @@ public class PlayerMovement : MonoBehaviour
         foreach (PlayerMoveCompanion companion in companions)
         {
             companion.destination = footsteps[index];
-            index++;
+            index += companionDistance;
         }
     }
 }

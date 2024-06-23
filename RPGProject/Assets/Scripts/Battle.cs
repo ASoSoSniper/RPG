@@ -29,7 +29,7 @@ public class Battle : MonoBehaviour
 
     [SerializeField] GameObject fighterPrefab;
 
-    [SerializeField] GameObject battleUI;
+    public GameObject battleUI;
     [SerializeField] Vector2 fighterInitPosition = new Vector2(100f, 0f);
     [SerializeField] Vector2 fighterInterval = new Vector2(40f, 60f);
     public Vector2 spectaclePosOffset = new Vector2(0f, 0f);
@@ -60,6 +60,8 @@ public class Battle : MonoBehaviour
     public Fighter selectedFighter;
     public Button hoveredButton;
     public Canvas hitStatusCanvas;
+    public GameObject topLayer;
+    public GameObject stateButtonsObject;
 
     public enum SelectionModes
     {
@@ -70,8 +72,23 @@ public class Battle : MonoBehaviour
         TargetSelect,
         InputDisabled
     }
-    [SerializeField] SelectionModes selectionMode = SelectionModes.None;
+    [SerializeField] SelectionModes selectionMode = SelectionModes.InputDisabled;
+
+    public enum BattleModes
+    {
+        Intro,
+        Fight,
+        End
+    }
+    [SerializeField] BattleModes battleMode = BattleModes.Intro;
+    [SerializeField] float introBeginDelay = 1f;
+    [SerializeField] float introSpawnSpacing = 0.5f;
+    [SerializeField] float introEndSpacing = 0.05f;
+    [SerializeField] float introEndDelay = 1f;
+    [SerializeField] GameObject spawnEffect;
+
     public bool attackerAttacking;
+    bool ending;
 
     // Start is called before the first frame update
     void Start()
@@ -82,6 +99,8 @@ public class Battle : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (battleMode != BattleModes.Fight) return;
+
         switch (selectionMode)
         {
             case SelectionModes.None:
@@ -114,7 +133,7 @@ public class Battle : MonoBehaviour
         for (int i = 0; i < playerFighters.Count; i++)
         {
             //Spawn fighter in the world
-            GameObject spawn = Instantiate(fighterPrefab, this.gameObject.transform);
+            GameObject spawn = Instantiate(fighterPrefab, topLayer.gameObject.transform);
 
             //Set up fighter identity
             Fighter fighter = spawn.GetComponent<Fighter>();
@@ -133,7 +152,7 @@ public class Battle : MonoBehaviour
         for (int i = 0; i < enemyFighters.Count; i++)
         {
             //Spawn fighter in the world
-            GameObject spawn = Instantiate(fighterPrefab, this.gameObject.transform);
+            GameObject spawn = Instantiate(fighterPrefab, topLayer.gameObject.transform);
 
             //Set up fighter identity
             Fighter fighter = spawn.GetComponent<Fighter>();
@@ -151,10 +170,44 @@ public class Battle : MonoBehaviour
                 fighter.idlePosition = enemyPositions[i];
             }
         }
-
-        CreateFighterDisplay();
     }
 
+    public IEnumerator IntroSequence()
+    {
+        topLayer.gameObject.SetActive(true);
+
+        for (int i = 0; i < playerSprites.Count; i++)
+        {
+            playerSprites[i].gameObject.SetActive(false);
+        }
+
+        yield return new WaitForSeconds(introBeginDelay);
+
+        for (int i = 0; i < playerSprites.Count; i++)
+        {
+            playerSprites[i].gameObject.SetActive(true);
+            playerSprites[i].animator.SetTrigger("Intro");
+
+            if (spawnEffect)
+            {
+                GameObject particle = Instantiate(spawnEffect, transform);
+                particle.transform.position = playerSprites[i].transform.position + Vector3.up * playerSprites[i].projectileYOffset;
+            }            
+
+            yield return new WaitForSeconds(introSpawnSpacing);
+        }
+
+        yield return new WaitForSeconds(introEndDelay);
+
+        for (int i = 0; i < playerSprites.Count; i++)
+        {
+            playerSprites[i].animator.SetTrigger("IntroEnd");
+            yield return new WaitForSeconds(introEndSpacing);
+        }
+
+        battleMode = BattleModes.Fight;
+        battleUI.SetActive(true);
+    }
     List<Vector2> FindFighterPositions(bool playerSide)
     {
         List<Vector2> result = new List<Vector2>();
@@ -294,9 +347,18 @@ public class Battle : MonoBehaviour
         switch (selectionMode)
         {
             case SelectionModes.None:
+                if (stateButtonsObject)
+                {
+                    foreach (Transform child in stateButtonsObject.transform)
+                    {
+                        StateButton button = child.GetComponent<StateButton>();
+                        if (button) button.SetButtonColor(false);
+                    }
+                }
                 break;
             case SelectionModes.FighterSelect:
                 fighterWindow.SetActive(true);
+                CreateFighterDisplay();
                 activeItem = null;
                 break;
             case SelectionModes.AbilitySelect:
@@ -406,12 +468,15 @@ public class Battle : MonoBehaviour
         {
             for (int i = 0; i < activeItem.ability.castsPerTarget; i++)
             {
-                activeItem.ability.abilityEffect.Trigger(target);
-                if (activeItem.ability.visualEffect)
+                if (activeItem.ability.abilityEffect.Trigger(target))
                 {
-                    GameObject visual = Instantiate(activeItem.ability.visualEffect.gameObject, transform);
-                    visual.transform.position = target.transform.position + Vector3.up * target.projectileYOffset;
+                    if (activeItem.ability.visualEffect)
+                    {
+                        GameObject visual = Instantiate(activeItem.ability.visualEffect.gameObject, transform);
+                        visual.transform.position = target.transform.position + Vector3.up * target.projectileYOffset;
+                    }
                 }
+                
             }
         }
 
@@ -489,6 +554,8 @@ public class Battle : MonoBehaviour
 
         int inactiveFighters = 0;
 
+        SwitchSelectionMode(SelectionModes.None);
+
         switch (currentTurn)
         {
             case Turns.PlayerTurn:
@@ -555,7 +622,16 @@ public class Battle : MonoBehaviour
     }
     void EndBattle()
     {
-        FindObjectOfType<GameManager>().StateTransition(GameManager.GameStates.Explore);
+        if (!ending)
+        {
+            StartCoroutine(TransitionTo());
+            ending = true;
+        }
+    }
+    IEnumerator TransitionTo()
+    {
+        yield return new WaitForSeconds(1f);
+        FindObjectOfType<LineupLogic>().GetComponent<Animator>().SetTrigger("Victory");
     }
 
     //For active status effects for each fighter, countdown each effect's turn duration and, if stated, trigger the effect at the start of the turn

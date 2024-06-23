@@ -23,5 +23,4 @@ MonoBehaviour:
   agility: 10
   abilities:
   - {fileID: 11400000, guid: b51de2b02dad46342b170afb68d7d2c9, type: 2}
-  - {fileID: 11400000, guid: 9fd7b73d93a604a41ad842956a0f4d76, type: 2}
   model: {fileID: 6645927817337182445, guid: 4d3618f301f5d6a4096053a68659ee7a, type: 3}

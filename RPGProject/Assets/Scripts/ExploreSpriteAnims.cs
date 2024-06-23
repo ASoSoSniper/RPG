@@ -24,7 +24,7 @@ public class ExploreSpriteAnims : MonoBehaviour
         }
 
         animator.SetBool("Moving", moving);
-        animator.SetInteger("X", (int)facingDirection.x);
-        animator.SetInteger("Y", (int)facingDirection.y);
+        animator.SetInteger("X", Mathf.RoundToInt(facingDirection.x));
+        animator.SetInteger("Y", Mathf.RoundToInt(facingDirection.y));
     }
 }

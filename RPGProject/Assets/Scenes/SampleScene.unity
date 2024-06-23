@@ -627,6 +627,8 @@ MonoBehaviour:
   enemies:
   - {fileID: 11400000, guid: 97cfa646e7d1cce4aaec539af44e6e1e, type: 2}
   - {fileID: 11400000, guid: 97cfa646e7d1cce4aaec539af44e6e1e, type: 2}
+  - {fileID: 11400000, guid: 97cfa646e7d1cce4aaec539af44e6e1e, type: 2}
+  - {fileID: 11400000, guid: 97cfa646e7d1cce4aaec539af44e6e1e, type: 2}
 --- !u!1 &1831272442
 GameObject:
   m_ObjectHideFlags: 0
@@ -736,11 +738,13 @@ MonoBehaviour:
   playerCharacters:
   - {fileID: 11400000, guid: e7109a0aeef51754a8341318ef3c5b19, type: 2}
   - {fileID: 11400000, guid: e7109a0aeef51754a8341318ef3c5b19, type: 2}
+  - {fileID: 11400000, guid: e7109a0aeef51754a8341318ef3c5b19, type: 2}
+  - {fileID: 11400000, guid: e7109a0aeef51754a8341318ef3c5b19, type: 2}
   testItem: {fileID: 11400000, guid: cec84a083511c434e912cd57ae24763a, type: 2}
   companions: []
   companionPrefab: {fileID: 5924217722010613934, guid: 0ac702f2e6a188a4ab26169a7e2f4740, type: 3}
   footsteps: []
-  footStepInterval: 1
+  companionDistance: 5
 --- !u!4 &1831272446
 Transform:
   m_ObjectHideFlags: 0

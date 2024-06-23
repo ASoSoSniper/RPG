@@ -144,8 +144,17 @@ public class AnimationFunctions : MonoBehaviour
         }
     }
 
-    public void KillFighter()
+    public void KillFighter(GameObject marble)
     {
         fighter.actionState = Fighter.ActionStates.Dead;
+
+        Battle battle = FindObjectOfType<Battle>();
+        for (int i = 0; i < 15; i++)
+        {
+            GameObject spawn = Instantiate(marble, battle.transform);
+            spawn.transform.position = fighter.transform.position; //+ Vector3.up * fighter.projectileYOffset;
+        }
+
+        GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0);
     }
 }

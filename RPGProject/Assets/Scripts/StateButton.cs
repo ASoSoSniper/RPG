@@ -10,6 +10,7 @@ public class StateButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     public Battle.SelectionModes transitionsTo;
     public Button button;
     public string description;
+    public Color selectedColor;
     Animator animator;
 
     // Start is called before the first frame update
@@ -26,6 +27,8 @@ public class StateButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         if (!battle) return;
 
         battle.SwitchSelectionMode(transitionsTo);
+
+        SetButtonColor(true);
     }
 
     public virtual void DisplayDescription()
@@ -48,5 +51,14 @@ public class StateButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     public void OnPointerExit(PointerEventData eventData)
     {
         if (animator) animator.SetBool("Hovering", false);
+    }
+
+    public void SetButtonColor(bool selected)
+    {
+        Image image = GetComponent<Image>();
+        if (image)
+        {
+            image.color = selected ? selectedColor : Color.white;
+        }
     }
 }

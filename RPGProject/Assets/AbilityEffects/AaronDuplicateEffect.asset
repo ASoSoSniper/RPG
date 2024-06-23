@@ -12,8 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa4f0892967bfe34a9935cbdff895fab, type: 3}
   m_Name: AaronDuplicateEffect
   m_EditorClassIdentifier: 
-  stackCap: 2
+  buffType: 0
+  stackCap: 3
   duplicatesCanCast: 0
+  durationType: 0
+  turnsTillRemoval: 1
+  castOnTurnStart: 0
+  hitStatusOnCast: 0
+  triggerMessage: Effect Applied!
+  hitStatusOnTurnStart: 0
+  turnStartMessage: 
+  textColor: {r: 1, g: 1, b: 1, a: 1}
+  textSize: 0.8
+  hitStatusPrefab: {fileID: 0}
   duplicatePrefab: {fileID: 2985252679489406597, guid: d8c774be5079bd243aeb230056f685f7, type: 3}
   visual: {fileID: 386248345385983837, guid: 0d47c2126188adc4a843046c0e1db1f3, type: 3}
   health: 20

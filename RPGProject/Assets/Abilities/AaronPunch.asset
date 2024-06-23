@@ -41,7 +41,7 @@ MonoBehaviour:
   randomizeSelection: 0
   visualEffect: {fileID: 0}
   visualType: 1
-  attackReturnDelay: 0.2
+  attackReturnDelay: 0
   attackReturnDuration: 1
   firePattern: 0
   castsPerTarget: 1

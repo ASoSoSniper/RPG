@@ -102,7 +102,7 @@ public class Fighter : MonoBehaviour
         currentFP = fighterInfo.currentFP;
         if (fighterInfo.model)
         {
-            GameObject sprite = Instantiate(fighterInfo.model, this.transform);
+            GameObject sprite = Instantiate(fighterInfo.model, transform);
             animator = sprite.GetComponent<Animator>();
         }
     }
@@ -214,6 +214,7 @@ public class Fighter : MonoBehaviour
         initReturnPos = transform.position;
         returnTime = activeAbility.attackReturnDuration;
         actionState = ActionStates.Return;
+        if (transform.position != (Vector3)idlePosition) animator.SetTrigger("Return");
         targets.Clear();
     }
 
@@ -257,11 +258,16 @@ public class Fighter : MonoBehaviour
         }
 
         currentHP = Mathf.Clamp(currentHP - damage, 0, fighterInfo.maxHealth);
+        
         if (currentHP <= 0)
         {
             animator.SetTrigger("Death");
             //actionState = ActionStates.Dead;
             turnEnded = true;
+        }
+        else
+        {
+            if (damage > 0) animator.SetTrigger("Damage");
         }
     }
 
