@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Skip turn
   m_EditorClassIdentifier: 
   buffType: 0
+  effectName: Stunned
   stackCap: 1
   duplicatesCanCast: 0
   durationType: 1

@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: AaronDamageBuff
   m_EditorClassIdentifier: 
   buffType: 2
+  effectName: Damage Buff
   stackCap: 2
   duplicatesCanCast: 1
   durationType: 1

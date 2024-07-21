@@ -7,3 +7,4 @@ public class WorldEnemy : MonoBehaviour
     public List<FighterInfo> enemies;
     public Dictionary<Item, int> items;
 }
+

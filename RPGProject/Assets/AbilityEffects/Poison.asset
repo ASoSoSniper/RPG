@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Poison
   m_EditorClassIdentifier: 
   buffType: 0
+  effectName: Poison
   stackCap: 1
   duplicatesCanCast: 1
   durationType: 1

@@ -301,6 +301,6 @@ public class Fighter : MonoBehaviour
     void OnMouseDown()
     {
         if (actionState != ActionStates.Dead)
-            battle.CollectTarget(this);
+            battle.SelectTarget(this);
     }
 }

@@ -32,6 +32,7 @@ public class Battle : MonoBehaviour
     public GameObject battleUI;
     [SerializeField] Vector2 fighterInitPosition = new Vector2(100f, 0f);
     [SerializeField] Vector2 fighterInterval = new Vector2(40f, 60f);
+    [SerializeField] float fighterXAlternate = 40f;
     public Vector2 spectaclePosOffset = new Vector2(0f, 0f);
 
     [Header("Fighter Selection")]
@@ -54,6 +55,9 @@ public class Battle : MonoBehaviour
     [SerializeField] float iconSpacing = 10f;
     List<ItemButton> itemList = new List<ItemButton>();
 
+    [Header("Analyze")]
+    [SerializeField] AnalysisMenu analyzeWindow;
+
     [Header("Other UI")]
     [SerializeField] float UISpacing = 30f;
     [SerializeField] TMP_Text descriptionText;
@@ -70,7 +74,8 @@ public class Battle : MonoBehaviour
         AbilitySelect,
         ItemSelect,
         TargetSelect,
-        InputDisabled
+        InputDisabled,
+        Analyze
     }
     [SerializeField] SelectionModes selectionMode = SelectionModes.InputDisabled;
 
@@ -221,12 +226,16 @@ public class Battle : MonoBehaviour
         float x = anchorMod * (fighterInitPosition.x - initX);
         float y = fighterInitPosition.y + initY;
 
+        float xAlt = fighterXAlternate;
+
         for (int i = 0; i < fighters.Count; i++)
         {
             result.Add(new Vector2(x, y));
 
-            x += anchorMod * fighterInterval.x;
+            x += anchorMod * (fighterInterval.x + xAlt);
             y -= fighterInterval.y;
+
+            xAlt *= -1;
         }
 
         return result;
@@ -340,6 +349,7 @@ public class Battle : MonoBehaviour
         fighterWindow.SetActive(false);
         abilityWindow.SetActive(false);
         itemWindow.SetActive(false);
+        analyzeWindow.gameObject.SetActive(false);
         battleUI.SetActive(true);
 
         itemTargets.Clear();
@@ -483,7 +493,21 @@ public class Battle : MonoBehaviour
         SwitchSelectionMode(SelectionModes.None);
     }
 
-    public void CollectTarget(Fighter target)
+    public void SelectTarget(Fighter target)
+    {
+        switch (selectionMode)
+        {
+            case SelectionModes.TargetSelect:
+                CollectTarget(target); 
+                break;
+            case SelectionModes.Analyze:
+                analyzeWindow.gameObject.SetActive(true);
+                analyzeWindow.DisplayFighter(target);
+                break;
+        }
+    }
+
+    void CollectTarget(Fighter target)
     {
         if (selectionMode != SelectionModes.TargetSelect) return;
 
@@ -523,7 +547,6 @@ public class Battle : MonoBehaviour
             if (itemTargets.Count >= activeItem.ability.numberOfTargets) TriggerItemEffect();
         }
     }
-
     void OrderFightersByDepth()
     {
         List<Fighter> sortedFighters = new List<Fighter>();

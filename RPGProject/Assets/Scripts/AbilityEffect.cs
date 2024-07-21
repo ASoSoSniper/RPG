@@ -43,6 +43,7 @@ public class AbilityEffect : ScriptableObject
 
     //public EffectType effectType;
     //public Element element;
+    public string effectName;
     public int stackCap = 1;
     public bool duplicatesCanCast = true;
 

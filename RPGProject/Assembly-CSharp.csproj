@@ -64,6 +64,7 @@
     <Compile Include="Assets\Scripts\AnimationFunctions.cs" />
     <Compile Include="Assets\Scripts\WorldEnemy.cs" />
     <Compile Include="Assets\Scripts\PlayerMoveCompanion.cs" />
+    <Compile Include="Assets\Scripts\AnalysisMenu.cs" />
     <Compile Include="Assets\Scripts\Ability.cs" />
     <Compile Include="Assets\Scripts\FleeButton.cs" />
     <Compile Include="Assets\Scripts\Projectile.cs" />
@@ -73,6 +74,7 @@
     <Compile Include="Assets\Scripts\AbilityEffect.cs" />
     <Compile Include="Assets\Scripts\Battle.cs" />
     <Compile Include="Assets\Scripts\AbilityEffectHeal.cs" />
+    <Compile Include="Assets\Scripts\EnemySpawner.cs" />
     <Compile Include="Assets\Scripts\AbilityEffectDOT.cs" />
     <Compile Include="Assets\Scripts\AbilityEffectDuplicate.cs" />
     <Compile Include="Assets\Scripts\Fighter.cs" />
@@ -89,6 +91,7 @@
     <Compile Include="Assets\Scripts\ExploreSpriteAnims.cs" />
     <Compile Include="Assets\Scripts\FighterButton.cs" />
     <Compile Include="Assets\Scripts\AbilityEffectSkipTurn.cs" />
+    <Compile Include="Assets\Scripts\AnalysisListElement.cs" />
     <Compile Include="Assets\Scripts\PlayerMovement.cs" />
   </ItemGroup>
   <ItemGroup>
