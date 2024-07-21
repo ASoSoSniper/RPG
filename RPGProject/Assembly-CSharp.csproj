@@ -73,9 +73,11 @@
     <Compile Include="Assets\Scripts\AbilityEffectBuff.cs" />
     <Compile Include="Assets\Scripts\AbilityEffect.cs" />
     <Compile Include="Assets\Scripts\Battle.cs" />
-    <Compile Include="Assets\Scripts\AbilityEffectHeal.cs" />
     <Compile Include="Assets\Scripts\EnemySpawner.cs" />
+    <Compile Include="Assets\Scripts\AbilityEffectHeal.cs" />
     <Compile Include="Assets\Scripts\AbilityEffectDOT.cs" />
+    <Compile Include="Assets\Scripts\ItemChest.cs" />
+    <Compile Include="Assets\Scripts\PlayerItemCollision.cs" />
     <Compile Include="Assets\Scripts\AbilityEffectDuplicate.cs" />
     <Compile Include="Assets\Scripts\Fighter.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />

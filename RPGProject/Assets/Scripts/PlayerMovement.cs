@@ -30,6 +30,8 @@ public class PlayerMovement : MonoBehaviour
     public static float footStepInterval = 0.8f;
     [SerializeField] int companionDistance = 3;
 
+    public List<ItemChest> chestsInRange;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -77,19 +79,52 @@ public class PlayerMovement : MonoBehaviour
         anims.UpdateDirection(direction != Vector2.zero);
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    public void Interact()
     {
-        if (collision.gameObject.CompareTag("Battle"))
-        {
-            WorldEnemy enemy = collision.gameObject.GetComponent<WorldEnemy>();
-            if (!enemy) return;
-            if (playerCharacters.Count == 0 || enemy.enemies.Count == 0) return;
+        if (chestsInRange.Count == 0) return;
 
-            gameManager.StateTransition(GameManager.GameStates.Battle);
-            gameManager.CreateBattle(playerCharacters, enemy.enemies, items, enemy.items);
+        ItemChest closestChest = null;
+        float closest = Mathf.Infinity;
+        foreach (ItemChest chest in chestsInRange)
+        {
+            if (chest.Opened()) continue;
+
+            float dist = Vector3.Distance(chest.transform.position, transform.position);
+            if (dist < closest)
+            {
+                closest = dist;
+                closestChest = chest;
+            }
+        }
+
+        if (!closestChest) return;
+
+        List<Item> itemsInRange = closestChest.GetItemsInChest();
+        foreach (Item item in itemsInRange)
+        {
+            AddItem(item);
         }
     }
 
+    public void AddItem(Item item)
+    {
+        if (!items.ContainsKey(item))
+        {
+            items.Add(item, 0);
+        }
+
+        items[item] += 1;
+        Debug.Log("Item acquired!");
+    }
+
+    public void StartBattle(WorldEnemy enemy)
+    {
+        if (!enemy) return;
+        if (playerCharacters.Count == 0 || enemy.enemies.Count == 0) return;
+
+        gameManager.StateTransition(GameManager.GameStates.Battle);
+        gameManager.CreateBattle(playerCharacters, enemy.enemies, items, enemy.items);
+    }
     void CreateFootstep()
     {
         if (Vector2.Distance(transform.position, footsteps[0]) < footStepInterval) return;

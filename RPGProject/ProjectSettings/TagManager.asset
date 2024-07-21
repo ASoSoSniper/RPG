@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Battle
+  - Chest
   layers:
   - Default
   - TransparentFX

@@ -31,6 +31,10 @@ public class GameManager : MonoBehaviour
         {
             case GameStates.Explore:
                 player.Move(new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")));
+                if (Input.GetButtonDown("Interact"))
+                {
+                    player.Interact();
+                }
                 break;
 
             case GameStates.Talk:

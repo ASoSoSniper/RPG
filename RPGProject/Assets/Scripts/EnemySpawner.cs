@@ -101,7 +101,7 @@ public class EnemySpawner : MonoBehaviour
                 }
             }
         }
-        Debug.Log(foundNodes.Count + " Cells found!");
+        //Debug.Log(foundNodes.Count + " Cells found!");
         return foundNodes;
     }
 }
