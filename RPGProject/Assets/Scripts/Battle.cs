@@ -67,6 +67,8 @@ public class Battle : MonoBehaviour
     public GameObject topLayer;
     public GameObject stateButtonsObject;
 
+    BattleMusic music;
+
     public enum SelectionModes
     {
         None,
@@ -99,6 +101,8 @@ public class Battle : MonoBehaviour
     void Start()
     {
         hitStatusCanvas.worldCamera = FindObjectOfType<Camera>();
+
+        music = FindObjectOfType<BattleMusic>();
     }
 
     // Update is called once per frame
@@ -187,6 +191,7 @@ public class Battle : MonoBehaviour
         }
 
         yield return new WaitForSeconds(introBeginDelay);
+        music.PlayBattleTheme();
 
         for (int i = 0; i < playerSprites.Count; i++)
         {
@@ -654,6 +659,7 @@ public class Battle : MonoBehaviour
     IEnumerator TransitionTo()
     {
         yield return new WaitForSeconds(1f);
+        music.PlayVictory();
         FindObjectOfType<LineupLogic>().GetComponent<Animator>().SetTrigger("Victory");
     }
 

@@ -56,6 +56,8 @@ public class LineupLogic : MonoBehaviour
 
     public void EndBattle()
     {
+        FindObjectOfType<BattleMusic>().PlayOverworld();
+
         FindObjectOfType<GameManager>().StateTransition(GameManager.GameStates.Explore);
     }
 }
