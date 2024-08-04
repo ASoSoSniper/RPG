@@ -34,7 +34,7 @@ public class FighterDuplicate : Fighter
         Vector3 direction = target - transform.position;
 
         float distance = Vector3.Distance(initReturnPos, target);
-        float speed = distance / returnTime;
+        float speed = distance / Mathf.Clamp(returnTime, 1, returnTime);
         transform.position += direction.normalized * speed * Time.deltaTime;
 
         if (Vector3.Distance(target, transform.position) < 0.01f)

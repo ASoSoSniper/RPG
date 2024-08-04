@@ -141,44 +141,53 @@ public class Battle : MonoBehaviour
 
         for (int i = 0; i < playerFighters.Count; i++)
         {
-            //Spawn fighter in the world
-            GameObject spawn = Instantiate(fighterPrefab, topLayer.gameObject.transform);
-
-            //Set up fighter identity
-            Fighter fighter = spawn.GetComponent<Fighter>();
-            fighter.SetupFighter(playerFighters[i]);
-            fighter.spectaclePosition = new Vector2(-spectaclePosOffset.x, spectaclePosOffset.y);            
-            playerSprites.Add(fighter);
-
-            //Position fighter in arena
-            if (i < playerPositions.Count)
-            {
-                spawn.transform.position = playerPositions[i];
-                fighter.idlePosition = playerPositions[i];
-            }   
+            CreateFighter(playerFighters[i], playerPositions[i], true);
         }
 
         for (int i = 0; i < enemyFighters.Count; i++)
         {
-            //Spawn fighter in the world
-            GameObject spawn = Instantiate(fighterPrefab, topLayer.gameObject.transform);
-
-            //Set up fighter identity
-            Fighter fighter = spawn.GetComponent<Fighter>();
-            fighter.SetupFighter(enemyFighters[i]);
-            fighter.spectaclePosition = spectaclePosOffset;
-            enemySprites.Add(fighter);
-
-            fighter.transform.localScale = new Vector3(-1, 1, 1);
-            fighter.axis = -1;
-
-            //Position fighter in arena
-            if (i < enemyPositions.Count)
-            {
-                spawn.transform.position = enemyPositions[i];
-                fighter.idlePosition = enemyPositions[i];
-            }
+            CreateFighter(enemyFighters[i], enemyPositions[i], false);
         }
+    }
+
+    public Fighter CreateFighter(FighterInfo info, Vector2 position, bool playerSide = true)
+    {
+        int offset = playerSide ? -1 : 1;
+
+        //Spawn fighter in the world
+        GameObject spawn = Instantiate(fighterPrefab, topLayer.gameObject.transform);
+
+        //Set up fighter identity
+        Fighter fighter = spawn.GetComponent<Fighter>();
+        fighter.SetupFighter(info);
+        fighter.spectaclePosition = new Vector2(offset * spectaclePosOffset.x, spectaclePosOffset.y);
+        if (offset < 0)
+        {
+            playerSprites.Add(fighter);
+        }
+        else
+        {
+            enemySprites.Add (fighter);
+        }
+
+        fighter.transform.localScale = new Vector3(-offset, 1, 1);
+        fighter.axis = -offset;
+
+        //Position fighter in arena
+        spawn.transform.position = position;
+        fighter.idlePosition = position;
+
+        return fighter;
+    }
+
+    public GameObject CreateSmokeBomb(Fighter fighter)
+    {
+        if (!spawnEffect) return null;
+
+        GameObject particle = Instantiate(spawnEffect, transform);
+        particle.transform.position = fighter.transform.position + Vector3.up * fighter.projectileYOffset;
+
+        return particle;
     }
 
     public IEnumerator IntroSequence()
@@ -198,11 +207,7 @@ public class Battle : MonoBehaviour
             playerSprites[i].gameObject.SetActive(true);
             playerSprites[i].animator.SetTrigger("Intro");
 
-            if (spawnEffect)
-            {
-                GameObject particle = Instantiate(spawnEffect, transform);
-                particle.transform.position = playerSprites[i].transform.position + Vector3.up * playerSprites[i].projectileYOffset;
-            }            
+            CreateSmokeBomb(playerSprites[i]);      
 
             yield return new WaitForSeconds(introSpawnSpacing);
         }
@@ -279,7 +284,7 @@ public class Battle : MonoBehaviour
         for (int i = 0; i < abilityList.Count; i++)
         {
             if (abilityList[i].assignedAbility == null)
-                abilityList[i].assignedAbility = selectedFighter.fighterInfo.abilities[i];
+                abilityList[i].assignedAbility = selectedFighter.specialAbilities[i];
 
             abilityList[i].DisplayInfo();
         }
@@ -293,7 +298,7 @@ public class Battle : MonoBehaviour
         }
         abilityList.Clear();
 
-        for (int i = 0; i < selectedFighter.fighterInfo.abilities.Count; i++)
+        for (int i = 0; i < selectedFighter.specialAbilities.Count; i++)
         {
             GameObject UISpawn = Instantiate(abilityButtonPrefab, abilityContentBox.transform);
             abilityList.Add(UISpawn.GetComponent<AbilityButton>());

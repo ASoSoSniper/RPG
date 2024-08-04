@@ -22,7 +22,8 @@ public class Ability : ScriptableObject
     {
         Individual,
         All,
-        Self
+        Self,
+        RefTarget
     }
     public enum FightersToTarget
     {
@@ -302,6 +303,10 @@ public class AbilityEditor : Editor
             case Ability.TargetSelection.All:
                 break;
             case Ability.TargetSelection.Self:
+                break;
+            case Ability.TargetSelection.RefTarget:
+                EditorGUILayout.PropertyField(numberOfTargets);
+                EditorGUILayout.PropertyField(randomizeSelection);
                 break;
         }
 

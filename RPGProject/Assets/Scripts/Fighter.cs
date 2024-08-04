@@ -13,8 +13,11 @@ public class AbilityEffectDuration
 public class Fighter : MonoBehaviour
 {
     public FighterInfo fighterInfo;
+    [HideInInspector] public FighterInfo otherInfoRef;
     public int currentHP;
+    public int maxHP;
     public int currentFP;
+    public int maxFP;
     public Vector2 idlePosition;
     public Vector2 spectaclePosition;
     protected Vector2 initReturnPos;
@@ -51,6 +54,8 @@ public class Fighter : MonoBehaviour
     public ActionStates actionState = ActionStates.Idle;
 
     [SerializeField] GameObject hitStatusPrefab;
+
+    public List<Ability> specialAbilities = new List<Ability>();
     
     // Start is called before the first frame update
     void Start()
@@ -65,7 +70,7 @@ public class Fighter : MonoBehaviour
     {
         if (fighterInfo && healthBar)
         {
-            healthBar.fillAmount = (float)currentHP / (float)fighterInfo.maxHealth;
+            healthBar.fillAmount = (float)currentHP / (float)maxHP;
         }
 
         switch (actionState)
@@ -99,7 +104,15 @@ public class Fighter : MonoBehaviour
     {
         fighterInfo = fighter;
         currentHP = fighterInfo.currentHealth;
+        maxHP = fighterInfo.maxHealth;
         currentFP = fighterInfo.currentFP;
+        maxFP = fighterInfo.maxFP;
+
+        foreach (Ability ability in fighter.abilities)
+        {
+            specialAbilities.Add(ability);
+        }
+
         if (fighterInfo.model)
         {
             GameObject sprite = Instantiate(fighterInfo.model, transform);
@@ -122,7 +135,7 @@ public class Fighter : MonoBehaviour
         {
             case Ability.MovementType.Constant:
                 float distance = Vector3.Distance(idlePosition, target);
-                float speed = distance / duration;
+                float speed = distance / Mathf.Clamp(duration, 1, duration);
                 transform.position += direction.normalized * speed * Time.deltaTime;
                 break;
 
@@ -145,7 +158,7 @@ public class Fighter : MonoBehaviour
         Vector3 direction = target - transform.position;
 
         float distance = Vector3.Distance(initReturnPos, target);
-        float speed = distance / returnTime;
+        float speed = distance / Mathf.Clamp(returnTime, 1, returnTime);
         transform.position += direction.normalized * speed * Time.deltaTime;
 
         if (Vector3.Distance(target, transform.position) < 0.01f)
@@ -175,7 +188,9 @@ public class Fighter : MonoBehaviour
         }
 
         targets.Add(targetToAdd);
-        if (activeAbility.targetSelection == Ability.TargetSelection.Individual && targets.Count == activeAbility.numberOfTargets)
+        if ((activeAbility.targetSelection == Ability.TargetSelection.Individual || 
+            activeAbility.targetSelection == Ability.TargetSelection.RefTarget) && 
+            targets.Count == activeAbility.numberOfTargets)
         {
             BeginAttack();
         }
@@ -212,7 +227,7 @@ public class Fighter : MonoBehaviour
     {
         targetIndex = 0;
         initReturnPos = transform.position;
-        returnTime = activeAbility.attackReturnDuration;
+        returnTime = activeAbility ? activeAbility.attackReturnDuration : 0;
         actionState = ActionStates.Return;
         if (transform.position != (Vector3)idlePosition) animator.SetTrigger("Return");
         targets.Clear();
@@ -257,7 +272,7 @@ public class Fighter : MonoBehaviour
             }
         }
 
-        currentHP = Mathf.Clamp(currentHP - damage, 0, fighterInfo.maxHealth);
+        currentHP = Mathf.Clamp(currentHP - damage, 0, maxHP);
         
         if (currentHP <= 0)
         {

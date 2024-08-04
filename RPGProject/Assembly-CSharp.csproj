@@ -88,6 +88,7 @@
     <Compile Include="Assets\Scripts\FighterInfo.cs" />
     <Compile Include="Assets\Scripts\LineupLogic.cs" />
     <Compile Include="Assets\Scripts\VolleyProjectile.cs" />
+    <Compile Include="Assets\Scripts\AbilityEffectShapeShift_Return.cs" />
     <Compile Include="Assets\Scripts\FighterDuplicate.cs" />
     <Compile Include="Assets\Scripts\AbilityEffectAddTurn.cs" />
     <Compile Include="Assets\Scripts\Item.cs" />
@@ -96,6 +97,7 @@
     <Compile Include="Assets\Scripts\AbilityEffectSkipTurn.cs" />
     <Compile Include="Assets\Scripts\AnalysisListElement.cs" />
     <Compile Include="Assets\Scripts\PlayerMovement.cs" />
+    <Compile Include="Assets\Scripts\AbilityEffectShapeShift.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

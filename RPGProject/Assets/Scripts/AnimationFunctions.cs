@@ -97,7 +97,8 @@ public class AnimationFunctions : MonoBehaviour
         {
             if (!fighter.WillHitTarget(fighter.targets[targetIndex], fighter)) return;
 
-            fighter.activeAbility.abilityEffect.Trigger(fighter.targets[targetIndex]);
+            Fighter target = fighter.activeAbility.targetSelection != Ability.TargetSelection.RefTarget ? fighter.targets[targetIndex] : fighter;
+            fighter.activeAbility.abilityEffect.Trigger(target);
             if (fighter.activeAbility.visualEffect)
             {
                 Battle battle = FindObjectOfType<Battle>();

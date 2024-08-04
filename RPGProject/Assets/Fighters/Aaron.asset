@@ -15,13 +15,14 @@ MonoBehaviour:
   displayName: Aaron
   description: Bro possesses knowledge of the Resident Evil franchise. He just like
     me fr fr.
-  maxHealth: 200
-  currentHealth: 200
+  maxHealth: 10
+  currentHealth: 10
   defense: 50
   maxFP: 50
   currentFP: 50
   agility: 10
   abilities:
+  - {fileID: 11400000, guid: d41ebe6dc41edc74e90a6c4910a570f0, type: 2}
   - {fileID: 11400000, guid: b51de2b02dad46342b170afb68d7d2c9, type: 2}
   - {fileID: 11400000, guid: 3f12b34285feae04bb6a0915b81e6648, type: 2}
   - {fileID: 11400000, guid: a5b8b6cd645a7634bbbd617547c0be75, type: 2}

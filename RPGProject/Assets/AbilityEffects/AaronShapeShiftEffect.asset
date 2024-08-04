@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae5c3bfb18a8e274faa73df987e75dba, type: 3}
+  m_Name: AaronShapeShiftEffect
+  m_EditorClassIdentifier: 
+  buffType: 0
+  effectName: 
+  stackCap: 1
+  duplicatesCanCast: 1
+  durationType: 0
+  turnsTillRemoval: 1
+  castOnTurnStart: 0
+  hitStatusOnCast: 0
+  triggerMessage: Effect Applied!
+  hitStatusOnTurnStart: 0
+  turnStartMessage: 
+  textColor: {r: 1, g: 1, b: 1, a: 1}
+  textSize: 0.8
+  hitStatusPrefab: {fileID: 0}
+  endTurn: 0
+  revertAbility: {fileID: 11400000, guid: 245ee177bd31a674598574305bf20701, type: 2}

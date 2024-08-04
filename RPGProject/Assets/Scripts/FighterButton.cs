@@ -14,9 +14,9 @@ public class FighterButton : StateButton
     {
         if (fighterName) fighterName.text = assignedFighter.fighterInfo.displayName;
 
-        if (health) health.text = "HP: " + assignedFighter.currentHP + "/" + assignedFighter.fighterInfo.maxHealth;
+        if (health) health.text = "HP: " + assignedFighter.currentHP + "/" + assignedFighter.maxHP;
 
-        if (FP) FP.text = "FP: " + assignedFighter.currentFP + "/" + assignedFighter.fighterInfo.maxFP;
+        if (FP) FP.text = "FP: " + assignedFighter.currentFP + "/" + assignedFighter.maxFP;
 
         if (assignedFighter)
         {
