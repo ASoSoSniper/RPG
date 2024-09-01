@@ -43,6 +43,8 @@ public class Fighter : MonoBehaviour
     protected float attackDelay;
     protected float returnDelay;
 
+    float fidgetTime = 5f;
+
     public enum ActionStates
     {
         Idle,
@@ -76,6 +78,13 @@ public class Fighter : MonoBehaviour
         switch (actionState)
         {
             case ActionStates.Idle:
+                fidgetTime -= Time.deltaTime;
+                if (fidgetTime <= 0f)
+                {
+                    animator.Play("Fidget", 0);
+                    fidgetTime = 5f;
+                }
+
                 break;
             case ActionStates.Move:
                 MoveToTarget(spectaclePosition, activeAbility.spectacleMoveType, activeAbility.spectacleMoveDuration);
